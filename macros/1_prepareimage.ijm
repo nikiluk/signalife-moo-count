@@ -16,7 +16,7 @@ watershedDir=inputDir+"watershed";
 File.makeDirectory(watershedDir);
 
 
-prepareImageForCounting(30);
+prepareEWECDW(30);
 
 
 run("Duplicate...", "title=_start");
@@ -85,19 +85,18 @@ function testRbr(rbr) {
 
 
 
-function prepareImageForCounting(rollingBallRadius) {
+function prepareEWECDW(rollingBallRadius) {
 	//Prepare the image
 	run("Subtract Background...", "rolling="+rollingBallRadius);
 	//setTool("zoom");
 	setAutoThreshold("Default dark");
 	setOption("BlackBackground", false);
 	run("Convert to Mask");
-	//run("Watershed");
-	//run("Erode");
-	//run("Dilate");
-    //run("Erode");
-	//run("Dilate");
+	run("Erode");
+	run("Watershed");
+	run("Erode");
+	run("Close-");
+	run("Dilate");
+	run("Watershed");
 
-	
-	
 }

@@ -1,19 +1,42 @@
+filePath=File.openDialog("Select a File"); 
+run("Bio-Formats", "open=["+filePath+"] autoscale color_mode=Default view=Hyperstack stack_order=XYCZT stitch_tiles");
+
+inputDir = getDirectory("image");
+fileName = getTitle;
+filePath = inputDir+fileName;
+
 id = getImageID();
-setAutoThreshold("Default");
+//setAutoThreshold("Default");
 
 run("ROI Manager...");
-roiManager("Open", "C:\\Users\\Nikita\\Desktop\\sample czi images\\25x_id8872_p-p_cre-neg_slide-2_slice-4_m2-m1_left\\RoiSet.zip");
+roiManager("Open", inputDir+"RoiSet.zip");
 roiManager("Show All");
 
 for (i=0 ; i<roiManager("count"); i++) {
     selectImage(id);
     roiManager("select", i);
-    run("Set Measurements...", "area perimeter fit display redirect=None decimal=3");
-    run("Analyze Particles...", "size=25-Infinity display exclude clear summarize");
-
     current = Roi.getName();
-	saveAs("Results", "C:\\Users\\Nikita\\Desktop\\sample czi images\\25x_id8872_p-p_cre-neg_slide-2_slice-4_m2-m1_left\\area_" + current + ".xls");
+    areaFilePath = inputDir+"area_" + current + ".xls";
+    
+
+    run("Set Measurements...", "area centroid center perimeter bounding fit shape feret's skewness kurtosis area_fraction display redirect=None decimal=3");
+    run("Analyze Particles...", "size=25-Infinity display exclude clear summarize");
+    wait(100);
+    selectWindow("Results"); 
+	saveAs("Results", areaFilePath);
 	wait(100);
+	run("Close");
 }
+
 wait(100);
-saveAs("Results", "C:\\Users\\Nikita\\Desktop\\sample czi images\\25x_id8872_p-p_cre-neg_slide-2_slice-4_m2-m1_left\\results_all.xls");
+selectWindow("Summary"); 
+saveAs("Results", inputDir+fileName+"_summary.xls");
+run("Close");
+
+if (isOpen("ROI Manager")) {
+	selectWindow("ROI Manager");
+    run("Close");
+}
+
+selectWindow(fileName); 
+run("Select None");

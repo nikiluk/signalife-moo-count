@@ -34,18 +34,51 @@ function processFile(input, output, fileExt) {
 	
 	run("Bio-Formats", "open=["+input+fileExt+"] autoscale color_mode=Default view=Hyperstack stack_order=XYCZT stitch_tiles");
 	
-	//getDimensions(width, height, channels, slices, frames);
-	
-	saveAs("Tiff", outputFileFolder+fileExt);
+	getDimensions(width, height, channels, slices, frames);
+	//save TIF stack
+	saveAs("Tiff", outputFileFolder+fileExt+"_slices-"+slices);
+
+	//create and save MIP
 	run("Z Project...", "projection=[Max Intensity]");
-	run("Scale Bar...", "width=1000 height=50 font=180 color=White background=None location=[Upper Right] bold hide overlay");
-	saveAs("Tiff", outputFileFolder+"MAX_"+fileExt);
-	saveAs("Jpeg", outputFileFolder+"MAX_"+fileExt);
-	prepareEWECDW(30);
-	saveAs("Tiff", outputFileFolder+"EWECDW_"+fileExt);
-	print("Processing MIP: " + input + fileExt);
-	print("Saving MIP to: " + outputFileFolder);
+	saveAs("Tiff", outputFileFolder+"MIP_"+fileExt+"_slices-"+slices);
+	
+	//close the TIF stack
+	selectWindow(fileExt+"_slices-"+slices+".tif");
+	wait(1000);
 	run("Close");
+	
+	//save JMIP
+	run("Duplicate...", "title=JMIP");
+	run("Scale Bar...", "width=1000 height=50 font=180 color=White background=None location=[Upper Right] bold hide overlay");
+	selectWindow("JMIP"); 
+	setFont("Arial", height*0.05, "antialiased");
+	makeText("Z-stack: "+slices, 50, 50);
+	run("Add Selection...", "stroke=white");
+	run("Flatten");
+	saveAs("Jpeg", outputFileFolder+"JMIP_"+fileExt+"_slices-"+slices);
+	
+	//close the flat image
+	run("Close");
+	
+	
+	//close the JMIP
+	selectWindow("JMIP"); 
+	wait(1000);
+	run("Close");
+
+	//prepare and close the EWEDCW
+	selectWindow("MIP_"+fileExt+"_slices-"+slices+".tif");
+	getPixelSize(unit, pixelWidth, pixelHeight);
+	//rolling ball radius in um = 20
+	rbr=20/pixelWidth;
+	prepareEWECDW(rbr);
+	saveAs("Tiff", outputFileFolder+"EWECDW_"+fileExt+"_slices-"+slices);
+	wait(1000);
+
+	//close MIP
+	run("Close");
+	
+
 }
 
 function prepareEWECDW(rollingBallRadius) {

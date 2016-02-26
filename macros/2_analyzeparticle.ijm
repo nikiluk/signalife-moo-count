@@ -20,7 +20,7 @@ for (i=0 ; i<roiManager("count"); i++) {
     
 
     run("Set Measurements...", "area centroid center perimeter bounding fit shape feret's skewness kurtosis area_fraction display redirect=None decimal=3");
-    run("Analyze Particles...", "size=25-Infinity display exclude clear summarize");
+    run("Analyze Particles...", "size=50-Infinity display exclude clear summarize");
     wait(100);
     selectWindow("Results"); 
 	saveAs("Results", areaFilePath);

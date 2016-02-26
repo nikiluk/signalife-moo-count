@@ -2,9 +2,7 @@
 filepath=File.openDialog("Select a File"); 
 run("Bio-Formats", "open=["+filepath+"] autoscale color_mode=Default view=Hyperstack stack_order=XYCZT stitch_tiles");
 
-//testRbr(20);
-//testRbr(30);
-//testRbr(40);
+
 
 inputDir = getDirectory("image");
 fileName = getTitle;
@@ -15,70 +13,17 @@ print(filePath);
 watershedDir=inputDir+"watershed";
 File.makeDirectory(watershedDir);
 
-
-prepareEWECDW(30);
-
-
-run("Duplicate...", "title=_start");
-saveAs("Tiff", watershedDir+"\\_start");
-
-//start of experiments
-run("Duplicate...", "title=w-e-d");
-run("Watershed");
-run("Erode");
-run("Dilate");
-saveAs("Tiff", watershedDir+"\\w-e-d");
-close();
-
-run("Duplicate...", "title=e-d-w");
-run("Erode");
-run("Dilate");
-run("Watershed");
-saveAs("Tiff", watershedDir+"\\e-d-w");
-close();
-
-run("Duplicate...", "title=e-w-e-d");
-run("Erode");
-run("Watershed");
-run("Erode");
-run("Dilate");
-saveAs("Tiff", watershedDir+"\\e-w-e-d");
-close();
-
-run("Duplicate...", "title=e-w-e-c-d");
-run("Erode");
-run("Watershed");
-run("Erode");
-run("Close-");
-run("Dilate");
-saveAs("Tiff", watershedDir+"\\e-w-e-c-d");
-close();
-
-//goooood ewecdw
-run("Duplicate...", "title=e-w-e-c-d-w");
-run("Erode");
-run("Watershed");
-run("Erode");
-run("Close-");
-run("Dilate");
-run("Watershed");
-saveAs("Tiff", watershedDir+"\\e-w-e-c-d-w");
-close();
-
-run("Duplicate...", "title=e-d-w-e-c-d-w");
-run("Erode");
-run("Dilate");
-run("Watershed");
-run("Erode");
-run("Close-");
-run("Dilate");
-run("Watershed");
-saveAs("Tiff", watershedDir+"\\e-d-w-e-c-d-w");
-close();
+testRbr(7);
+testRbr(10);
+testRbr(11);
+testRbr(12);
+testRbr(13);
+testRbr(15);
+testRbr(20);
 
 function testRbr(rbr) {
 	run("Duplicate...", "title="+rbr);
-	prepareImageForCounting(rbr);
+	prepareEWECDW(rbr);
 	saveAs("Tiff", filePath+"_"+rbr);
 	close(); 
 }

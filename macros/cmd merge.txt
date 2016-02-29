@@ -1,0 +1,2 @@
+for %f in (left_area*.xls) do type "%f" >> left.txt
+for %f in (right_area*.xls) do type "%f" >> right.txt

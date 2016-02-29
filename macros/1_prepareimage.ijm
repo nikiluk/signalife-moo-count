@@ -1,3 +1,6 @@
+startTime = getTime();
+
+
 //open("C:\\Users\\Nikita\\Desktop\\sample czi images\\output\\MAX_25x_id8872_p-p_cre-neg_slide-2_slice-4_m2-m1_left.tif");
 filepath=File.openDialog("Select a File"); 
 run("Bio-Formats", "open=["+filepath+"] autoscale color_mode=Default view=Hyperstack stack_order=XYCZT stitch_tiles");
@@ -20,6 +23,11 @@ testRbr(12);
 testRbr(13);
 testRbr(15);
 testRbr(20);
+
+
+endTime = getTime();
+
+print(endTime-startTime);
 
 function testRbr(rbr) {
 	run("Duplicate...", "title="+rbr);

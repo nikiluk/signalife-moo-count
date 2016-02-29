@@ -2,6 +2,8 @@
  * Macro template to process multiple images in a folder
  */
 
+startTime = getTime();
+
 inputPath = getDirectory("Input directory");
 Dialog.create("File type");
 Dialog.addString("File suffix: ", ".czi", 5);
@@ -9,6 +11,15 @@ Dialog.show();
 suffix = Dialog.getString();
 
 processFolder(inputPath);
+
+
+endTime = getTime();
+
+print(endTime-startTime);
+
+
+
+// FUNCTIONS GO BELOW
 
 function processFolder(input) {
 	//outputPath = inputPath+"\\output\\";
@@ -70,9 +81,9 @@ function processFile(input, output, fileExt) {
 	selectWindow("MIP_"+fileExt+"_slices-"+slices+".tif");
 	getPixelSize(unit, pixelWidth, pixelHeight);
 	//rolling ball radius in um = 20
-	rbr=20/pixelWidth;
+	rbr=floor(20/pixelWidth);
 	prepareEWECDW(rbr);
-	saveAs("Tiff", outputFileFolder+"EWECDW_"+fileExt+"_slices-"+slices);
+	saveAs("Tiff", outputFileFolder+"EWECDW_"+fileExt+"_rbr-"+rbr+"_slices-"+slices);
 	wait(1000);
 
 	//close MIP

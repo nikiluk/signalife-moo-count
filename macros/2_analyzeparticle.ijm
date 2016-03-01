@@ -5,7 +5,7 @@ startTime = getTime();
 
 
 // "right" or "left"
-hemisphere = "left";
+hemisphere = "right";
 
 
 

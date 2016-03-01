@@ -40,21 +40,32 @@ function processFile(input, output, fileExt) {
 
     dotIndex = indexOf(fileExt, "."); 
     fileNoExt = substring(fileExt, 0, dotIndex);
-	outputFileFolder = output+fileNoExt+"\\";
-	File.makeDirectory(outputFileFolder);
+	
 	
 	run("Bio-Formats", "open=["+input+fileExt+"] autoscale color_mode=Default view=Hyperstack stack_order=XYCZT stitch_tiles");
 	
 	getDimensions(width, height, channels, slices, frames);
-	//save TIF stack
-	saveAs("Tiff", outputFileFolder+fileExt+"_slices-"+slices);
+	getVoxelSize(voxelWidth, voxelHeight, voxelDepth, voxelUnit); 
 
+	//create directory
+	outputFileFolder = output+fileNoExt+"_slices-"+slices+"\\";
+	File.makeDirectory(outputFileFolder);
+
+	
+	//save TIF stack - don't really need this
+	
+	//this worked for files smaller than 4GB
+	//saveAs("Tiff", outputFileFolder+fileExt+"_slices-"+slices);
+
+	//this to try...
+	//run("Bio-Formats Exporter", "save=["+outputFileFolder+fileExt+"_slices-"+slices+".ome.tif] export compression=Uncompressed");
+	
 	//create and save MIP
 	run("Z Project...", "projection=[Max Intensity]");
 	saveAs("Tiff", outputFileFolder+"MIP_"+fileExt+"_slices-"+slices);
 	
 	//close the TIF stack
-	selectWindow(fileExt+"_slices-"+slices+".tif");
+	selectWindow(fileExt);
 	wait(1000);
 	run("Close");
 	
@@ -62,8 +73,11 @@ function processFile(input, output, fileExt) {
 	run("Duplicate...", "title=JMIP");
 	run("Scale Bar...", "width=1000 height=50 font=180 color=White background=None location=[Upper Right] bold hide overlay");
 	selectWindow("JMIP"); 
-	setFont("Arial", height*0.05, "antialiased");
-	makeText("Z-stack: "+slices, 50, 50);
+	
+	fontSize=height*0.02;
+	setFont("Arial", fontSize, "antialiased");
+	makeText("z-stack: "+slices+" slices\n"+voxelWidth+"*"+voxelHeight+"*"+voxelDepth+" "+voxelUnit, 2*fontSize, 2*fontSize);
+	
 	run("Add Selection...", "stroke=white");
 	run("Flatten");
 	saveAs("Jpeg", outputFileFolder+"JMIP_"+fileExt+"_slices-"+slices);

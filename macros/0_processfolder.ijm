@@ -43,12 +43,14 @@ function processFile(input, output, fileExt) {
 	
 	
 	run("Bio-Formats", "open=["+input+fileExt+"] autoscale color_mode=Default view=Hyperstack stack_order=XYCZT stitch_tiles");
-	
+	originalFileName = getTitle;
 	getDimensions(width, height, channels, slices, frames);
 	getVoxelSize(voxelWidth, voxelHeight, voxelDepth, voxelUnit); 
 
 	//create directory
-	outputFileFolder = output+fileNoExt+"_slices-"+slices+"\\";
+	outputProcessedFolder = output+"PROCESSED\\";
+	File.makeDirectory(outputProcessedFolder);
+	outputFileFolder = outputProcessedFolder+fileNoExt+"_slices-"+slices+"\\";
 	File.makeDirectory(outputFileFolder);
 
 	
@@ -65,7 +67,7 @@ function processFile(input, output, fileExt) {
 	saveAs("Tiff", outputFileFolder+"MIP_"+fileExt+"_slices-"+slices);
 	
 	//close the TIF stack
-	selectWindow(fileExt);
+	selectWindow(originalFileName);
 	wait(1000);
 	run("Close");
 	

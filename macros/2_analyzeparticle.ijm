@@ -33,7 +33,7 @@ for (i=0 ; i<roiManager("count"); i++) {
     
 
     run("Set Measurements...", "area centroid center perimeter bounding fit shape feret's area_fraction display redirect=None decimal=3");
-    run("Analyze Particles...", "size=50-300 display exclude clear summarize");
+    run("Analyze Particles...", "size=0-300 display exclude clear summarize");
     wait(1000);
     selectWindow("Results"); 
 	saveAs("Results", areaFilePath);

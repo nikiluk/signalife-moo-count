@@ -1,2 +1,24 @@
-for %f in (left_area*.xls) do type "%f" >> left.txt
-for %f in (right_area*.xls) do type "%f" >> right.txt
+for %* in (.) do set CurrDirName=%~nx*
+for %f in (left_area*.xls) do type "%f" >> %CurrDirName%_cells_left.xls
+for %f in (right_area*.xls) do type "%f" >> %CurrDirName%_cells_right.xls
+
+
+for %* in (.) do set CurrDirName=%~nx*
+for %f in (right_area*.xls) do type "%f" >> %CurrDirName%_cells_right.xls
+
+for %* in (.) do set CurrDirName=%~nx*
+for %f in (area*.xls) do type "%f" >> %CurrDirName%_cells_both.xls
+
+
+for /r %x in (*cells_right.xls) do type "%x" >> 2016-03-09_cells_right_merge.xls
+
+for /r %x in (*merge.txt) do type "%x" >> 2016-03-09_cells_merged_hemispheres.xls
+
+
+
+
+
+
+another way of quicker joint
+for /r %x in (right_area*.xls) do type "%x" >> 2016-03-09_cells_right_merge.xls
+

@@ -14,31 +14,36 @@ workingDir = getDirectory("image");
 outputPath=workingDir+timeStampo()+"_output\\";
 File.makeDirectory(outputPath);
 
+binLegendFile = File.open(outputPath+"binLegend.csv");
+
 for(i=1; i<=(lengthOf(xCoordinates)); i++) {
     //define the line by the initial points
 
     
     defineLine(xCoordinates[i-1], yCoordinates[i-1] ,xCoordinates[i], yCoordinates[i], binWidth/voxelWidth, binLength/voxelWidth);
 
-	binNumber = (i-1)/2+1;
-    exportProfile(outputPath, "Profile_pixels_"+binNumber+".txt");
+	binNumber = (i-1)/2+1; //starts from 1
+    exportProfile(outputPath, "Profile_pixels_"+binNumber+".csv");
 
 
 	//run("Plot Profile");
 	
     // add line in the roiManager for the history
+    
     roiManager("Add");
+    roiManager("Show All with labels");
+    roiManager("Select", binNumber-1); //starts from 0, not 1
+    roiManager("Rename", binNumber);
+
+	//print binLegend.csv
+    print(binLegendFile, binNumber);
     //print the log
 	//print("Starting Point:"+i);
-
-
-
-
-
     
 	i=i+1;
     wait(delay);
 }
+File.close(binLegendFile)
 
 roiManager("Show All");
 

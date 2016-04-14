@@ -25,7 +25,7 @@ outputPath=workingDir+timeStampo()+"_output\\";
 File.makeDirectory(outputPath);
 
 binLegendFile = File.open(outputPath+"binLegend_"+imageName+".csv");
-print(binLegendFile, "binNumber"+","+"Filename"+","+"Hemisphere"+","+"Area");
+print(binLegendFile, "binNumber"+","+"imageName"+","+"Hemisphere"+","+"Area");
 
 for(i=1; i<=(lengthOf(xCoordinates)); i++) {
     //define the line by the 2 initial points

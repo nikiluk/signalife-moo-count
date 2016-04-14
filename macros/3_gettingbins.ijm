@@ -1,3 +1,8 @@
+//
+// this macros calculates intensity profile of the bins that are defined by the pairs of points
+//
+
+//run("Enhance Contrast...", "saturated=0.3");
 run("Point Tool...", "type=Hybrid color=Red size=Small label counter=0");
 setTool("multipoint");
 run("Point Tool...", "type=Hybrid color=Green size=Small label counter=0");
@@ -5,25 +10,34 @@ getVoxelSize(voxelWidth, voxelHeight, voxelDepth, voxelUnit);
 run("ROI Manager...");
 getSelectionCoordinates(xCoordinates, yCoordinates);
 
-binWidth = 400; //um
+rbr=floor(20/voxelWidth);
+run("Subtract Background...", "rolling="+rbr);
+
+
+binWidth = 200; //um
 binLength = 1500; //um
 delay = 1000;
+beforeP = 250; //um
 
 workingDir = getDirectory("image");
-	 
+imageName = getTitle;	 
 outputPath=workingDir+timeStampo()+"_output\\";
 File.makeDirectory(outputPath);
 
-binLegendFile = File.open(outputPath+"binLegend.csv");
+binLegendFile = File.open(outputPath+"binLegend_"+imageName+".csv");
+print(binLegendFile, "binNumber"+","+"Filename"+","+"Hemisphere"+","+"Area");
 
 for(i=1; i<=(lengthOf(xCoordinates)); i++) {
-    //define the line by the initial points
-
+    //define the line by the 2 initial points
     
-    defineLine(xCoordinates[i-1], yCoordinates[i-1] ,xCoordinates[i], yCoordinates[i], binWidth/voxelWidth, binLength/voxelWidth);
+    // defined in pixels
+    defineLine(xCoordinates[i-1], yCoordinates[i-1] ,xCoordinates[i], yCoordinates[i], binWidth/voxelWidth, binLength/voxelWidth, beforeP/voxelWidth);
 
 	binNumber = (i-1)/2+1; //starts from 1
-    exportProfile(outputPath, "Profile_pixels_"+binNumber+".csv");
+
+	if (binNumber<10) {formattingZero = "0";}
+	else {formattingZero = "";}
+    exportProfile(outputPath, "Profile_pixels_"+formattingZero+binNumber+".txt");
 
 
 	//run("Plot Profile");
@@ -36,7 +50,7 @@ for(i=1; i<=(lengthOf(xCoordinates)); i++) {
     roiManager("Rename", binNumber);
 
 	//print binLegend.csv
-    print(binLegendFile, binNumber);
+    print(binLegendFile, binNumber+","+imageName);
     //print the log
 	//print("Starting Point:"+i);
     
@@ -77,15 +91,14 @@ function exportProfile(outputPath, fileName) {
 	profile = getProfile();
 	
 	for (j=0; j<profile.length; j++) //profile.lengths in um
-		setResult("Value "+binNumber, j, profile[j]);
+		setResult("intensity"+"\t"+voxelWidth+"\t"+binNumber+"\t"+imageName, j, profile[j]);
 	updateResults();
 	
 	saveAs("Measurements", outputPath+fileName);
 	close("Results");
 }
 
-function defineLine(x1, y1 ,x2, y2, binW, binL) {
-	beforePia = 200;
+function defineLine(x1, y1 ,x2, y2, binW, binL, beforePia) {
 	
 	linePts = newArray(0,0,0,0); 
 	basis = newArray(1,1); 

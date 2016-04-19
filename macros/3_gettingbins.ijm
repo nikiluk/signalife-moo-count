@@ -21,7 +21,7 @@ beforeP = 20; //um
 
 workingDir = getDirectory("image");
 imageName = getTitle;	 
-outputPath=workingDir+timeStampo()+"_output\\";
+outputPath=workingDir+timeStampo()+"_outputProfiles\\";
 File.makeDirectory(outputPath);
 
 binLegendFile = File.open(outputPath+"binLegend_"+imageName+".csv");

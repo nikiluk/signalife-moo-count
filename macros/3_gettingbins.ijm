@@ -14,10 +14,10 @@ rbr=floor(20/voxelWidth);
 run("Subtract Background...", "rolling="+rbr);
 
 
-binWidth = 200; //um
+binWidth = 300; //um
 binLength = 1500; //um
-delay = 1000;
-beforeP = 250; //um
+delay = 500;
+beforeP = 20; //um
 
 workingDir = getDirectory("image");
 imageName = getTitle;	 
@@ -25,7 +25,7 @@ outputPath=workingDir+timeStampo()+"_output\\";
 File.makeDirectory(outputPath);
 
 binLegendFile = File.open(outputPath+"binLegend_"+imageName+".csv");
-print(binLegendFile, "binNumber"+","+"imageName"+","+"Hemisphere"+","+"Area");
+print(binLegendFile, "binNumber"+","+"imageName"+","+"Hemisphere"+","+"Area"+","+"rostralPosition");
 
 for(i=1; i<=(lengthOf(xCoordinates)); i++) {
     //define the line by the 2 initial points

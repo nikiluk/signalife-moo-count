@@ -16,7 +16,7 @@ run("Subtract Background...", "rolling="+rbr);
 
 binWidth = 300; //um
 binLength = 1500; //um
-delay = 500;
+delay = 700;
 beforeP = 20; //um
 
 workingDir = getDirectory("image");
